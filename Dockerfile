@@ -9,11 +9,7 @@ EXPOSE 3000
 ENV NODE_ENV=production \
   MQTT_URL="" \
   MQTT_TOPIC="news/drudge" \
-<<<<<<< HEAD
   MYSQL_HOST="" \
-=======
-  MYSQL_HOST=""
->>>>>>> master
   MYSQL_PORT=3306 \
   MYSQL_USER="" \
   MYSQL_PASSWORD="" \
