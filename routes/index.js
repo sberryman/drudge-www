@@ -88,7 +88,7 @@ router.get('/', function (req, res, next) {
           mqttUrl: config.MQTT_URL,
           mqttTopic: config.MQTT_TOPIC,
           articles: mappedRows,
-          lastUpdate: rows[0].ts_last
+          lastUpdate: rows[0].ts_first
         }
       )
     }
