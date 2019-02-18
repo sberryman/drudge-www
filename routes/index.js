@@ -7,7 +7,6 @@ const hbs = require('hbs')
 
 // validate it!
 const schema = Joi.object({
-  DB_PATH: Joi.string(),
   MQTT_URL: Joi.string()
     .uri({
       scheme: ['mqtt', 'mqtts', 'ws', 'wss']
