@@ -1,11 +1,20 @@
 FROM mhart/alpine-node:10
 
 WORKDIR /app
-COPY . .
 
-# If you have native dependencies, you'll need extra tools
-# RUN apk add --no-cache make gcc g++ python
+# expose our tcp port
+EXPOSE 3000
 
+# environment variables to make it easier in GUI editors
+ENV DB_PATH="" \
+  MQTT_URL="" \
+  MQTT_TOPIC="news/drudge"
+
+# install dependencies
+COPY package*.json .
 RUN npm install --prod
 
-CMD ["node", "index.js"]
+# copy everything now that deps have been installed
+COPY . .
+
+CMD ["npm", "start"]
