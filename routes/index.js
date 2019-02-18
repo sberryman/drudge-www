@@ -29,7 +29,7 @@ if (error) {
 /* GET home page. */
 router.get('/', function (req, res, next) {
   // create the db connection
-  const db = new sqlite3.Database(config.DB_PATH)
+  const db = new sqlite3.Database(config.DB_PATH, sqlite3.OPEN_READONLY)
 
   db.all(
     'SELECT * FROM links ORDER BY ts_first DESC LIMIT 25',
@@ -41,11 +41,11 @@ router.get('/', function (req, res, next) {
 
       // log the error
       if (err) {
-        throw err
+        return next(err)
       }
 
       if (!rows || rows.length < 1) {
-        throw new Error('No news in the database!!!')
+        return next(new Error('No news in the database!!!'))
       }
 
       // force rows bit to boolean and rename ts_first to 'at'
