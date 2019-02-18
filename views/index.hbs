@@ -1,0 +1,48 @@
+<div class="row mb-2">
+  <div class="col-12 logo-container">
+    <img class="logo" src="https://www.drudgereport.com/i/logo9.gif" />
+  </div>
+</div>
+
+<div id="articles" class="list-group mb-5">
+  {{#each articles}}
+  <a href="{{{ url }}}" class="list-group-item list-group-item-action" target="_blank">
+    {{ text }}
+    <small>
+      <time datetime="{{ at }}">{{ momentFromNow at }}</time>
+      {{#if headline}}
+      <span class="badge badge-primary badge-pill">headline</span>
+      {{/if}}
+      {{#if important}}
+      <span class="badge badge-danger badge-pill">important</span>
+      {{/if}}
+    </small>
+  </a>
+  {{/each}}
+</div>
+
+<div class="footer">
+  <div class="footer-container">
+    <span class="text-muted"><span id="mqttState">Disconnected</span>: Last article <time id="lastUpdate" datetime="{{ lastUpdate }}">{{ momentFromNow lastUpdate }}</time></span>
+  </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="/javascripts/moment.min.js"></script>
+<script src="/javascripts/mqtt.min.js"></script>
+<script src="/javascripts/live.js"></script>
+<script type="text/javascript">
+  // mqtt client and subscription
+  var client = mqtt.connect('{{{ mqttUrl }}}')
+  client.subscribe('{{{ mqttTopic }}}')
+  client.on('message', (topic, payload) => {
+    // decode the byte array (utf8)
+    var decodedPayload = stringFromUTF8Array(payload)
+
+    // parse the string as JSON as send to newArticle
+    newArticle(JSON.parse(decodedPayload))
+  })
+  client.on('connect', () => { $('#mqttState').text('Connected') })
+  client.on('offline', () => { $('#mqttState').text('Disconnected') })
+</script>
