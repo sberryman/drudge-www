@@ -7,9 +7,13 @@ EXPOSE 3000
 
 # environment variables to make it easier in GUI editors
 ENV NODE_ENV=production \
-  DB_PATH="" \
   MQTT_URL="" \
-  MQTT_TOPIC="news/drudge"
+  MQTT_TOPIC="news/drudge" \
+  MYSQL_HOST="" \
+  MYSQL_PORT=3306 \
+  MYSQL_USER="" \
+  MYSQL_PASSWORD="" \
+  MYSQL_DATABASE="drudge"
 
 # install dependencies
 COPY package*.json ./

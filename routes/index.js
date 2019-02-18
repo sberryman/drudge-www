@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const sqlite3 = require('sqlite3').verbose()
+const mysql = require('mysql')
 const moment = require('moment')
 const Joi = require('joi')
 const hbs = require('hbs')
@@ -12,7 +12,23 @@ const schema = Joi.object({
     .uri({
       scheme: ['mqtt', 'mqtts', 'ws', 'wss']
     }),
-  MQTT_TOPIC: Joi.string()
+  MQTT_TOPIC: Joi.string(),
+
+  MYSQL_HOST: Joi.string(),
+
+  MYSQL_PORT: Joi.number()
+    .positive()
+    .optional()
+    .default(3306),
+
+  MYSQL_USER: Joi.string()
+    .optional(),
+
+  MYSQL_PASSWORD: Joi.string()
+    .optional(),
+
+  MYSQL_DATABASE: Joi.string()
+    .default('drudge')
 })
 const { error, value: config } = Joi.validate(
   process.env,
@@ -26,19 +42,26 @@ if (error) {
   throw new Error(`Persist config validation error: ${error.message}`)
 }
 
+// create the mysql connection, dont do this on EVERY request as we did
+// with sqlite
+// create the db connection
+const db = mysql.createConnection({
+  host: config.MYSQL_HOST,
+  port: config.MYSQL_PORT,
+  user: config.MYSQL_USER,
+  password: config.MYSQL_PASSWORD,
+  database: config.MYSQL_DATABASE
+})
+
+// connect!
+db.connect()
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  // create the db connection
-  const db = new sqlite3.Database(config.DB_PATH, sqlite3.OPEN_READONLY)
-
-  db.all(
-    'SELECT * FROM links ORDER BY ts_first DESC LIMIT 25',
+  db.query(
+    'SELECT * FROM links WHERE advert=0 ORDER BY ts_first DESC LIMIT 25',
     [],
     (err, rows) => {
-      // close the db connection
-      db.close()
-      // console.log(rows)
-
       // log the error
       if (err) {
         return next(err)
@@ -75,6 +98,11 @@ router.get('/', function (req, res, next) {
 
 hbs.registerHelper('momentFromNow', (item, options) => {
   return moment(item).fromNow()
+})
+
+// ensure the db gets closed on restart!
+process.on('exit', () => {
+  db.end()
 })
 
 module.exports = router
