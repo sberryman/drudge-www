@@ -6,7 +6,8 @@ WORKDIR /app
 EXPOSE 3000
 
 # environment variables to make it easier in GUI editors
-ENV DB_PATH="" \
+ENV NODE_ENV=production \
+  DB_PATH="" \
   MQTT_URL="" \
   MQTT_TOPIC="news/drudge"
 
