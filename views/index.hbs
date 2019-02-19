@@ -1,10 +1,10 @@
-<div class="row mt-1 mb-2">
+<!-- <div class="row mt-1 mb-2">
   <div class="col-12 logo-container">
     <img class="logo" src="https://www.drudgereport.com/i/logo9.gif" />
   </div>
-</div>
+</div> -->
 
-<div id="articles" class="list-group">
+<div id="articles" class="list-group mt-2">
   {{#each articles}}
   <a href="{{{ url }}}" class="list-group-item list-group-item-action" target="_blank">
     {{ text }}
@@ -21,9 +21,13 @@
   {{/each}}
 </div>
 
-<div class="row mt-1 mb-5">
-  <div class="col-12">
-    <div id="mqtt-state">Disconnected</div>
+<div class="row mt-3 mb-5">
+  <div class="col-12 footer">
+    <span id="mqtt-state">Disconnected</span>
+    <span> - </span>
+    <a href="https://drudgereport.com" target="_blank">
+      DrudgeReport.com
+    </a>
   </div>
 </div>
 
