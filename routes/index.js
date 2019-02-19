@@ -88,6 +88,7 @@ router.get('/', function (req, res, next) {
       if (!rows || rows.length < 1) {
         return next(new Error('No news in the database!!!'))
       }
+      console.log(rows)
 
       // force rows bit to boolean and rename ts_first to 'at'
       const mappedRows = rows.map((item) => {
