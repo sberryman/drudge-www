@@ -21,9 +21,6 @@ var newArticle = function (data) {
     </a>
   `)
 
-  // update the last update timestamp
-  $('#lastUpdate').attr('datetime', data.at.toString())
-
   // trigger a timestamp update
   updateTimeAgos()
 }
