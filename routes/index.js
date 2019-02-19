@@ -49,7 +49,21 @@ const db = mysql.createConnection({
   port: config.MYSQL_PORT,
   user: config.MYSQL_USER,
   password: config.MYSQL_PASSWORD,
-  database: config.MYSQL_DATABASE
+  database: config.MYSQL_DATABASE,
+  typeCast: function castField (field, useDefaultTypeCasting) {
+    // We only want to cast bit fields that have a single-bit in them. If the field
+    // has more than one bit, then we cannot assume it is supposed to be a Boolean.
+    if ((field.type === 'BIT') && (field.length === 1)) {
+      var bytes = field.buffer()
+
+      // A Buffer in Node represents a collection of 8-bit unsigned integers.
+      // Therefore, our single "bit field" comes back as the bits '0000 0001',
+      // which is equivalent to the number 1.
+      return (bytes[0] === 1)
+    }
+
+    return (useDefaultTypeCasting())
+  }
 })
 
 // connect!
@@ -74,13 +88,14 @@ router.get('/', function (req, res, next) {
       if (!rows || rows.length < 1) {
         return next(new Error('No news in the database!!!'))
       }
+      console.log(rows)
 
       // force rows bit to boolean and rename ts_first to 'at'
       const mappedRows = rows.map((item) => {
         return {
           at: item.ts_first,
-          important: item.important === 1,
-          headline: item.headline === 1,
+          important: item.important,
+          headline: item.headline,
           text: item.summary,
           url: item.url
         }
