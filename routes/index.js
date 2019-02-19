@@ -58,8 +58,13 @@ db.connect()
 /* GET home page. */
 router.get('/', function (req, res, next) {
   db.query(
-    'SELECT * FROM links WHERE advert=0 ORDER BY ts_first DESC LIMIT 25',
-    [],
+    `SELECT * FROM links
+      WHERE advert=0 AND
+        ts_last >= ?
+      ORDER BY ts_first DESC`,
+    [
+      Date.now() - (90 * 60 * 1000)
+    ],
     (err, rows) => {
       // log the error
       if (err) {
