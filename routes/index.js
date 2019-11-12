@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const mysql = require('mysql')
 const moment = require('moment')
-const Joi = require('joi')
+const Joi = require('@hapi/joi')
 const hbs = require('hbs')
 
 // validate it!
@@ -29,9 +29,8 @@ const schema = Joi.object({
   MYSQL_DATABASE: Joi.string()
     .default('drudge')
 })
-const { error, value: config } = Joi.validate(
+const { error, value: config } = schema.validate(
   process.env,
-  schema,
   {
     presence: 'required',
     stripUnknown: true
