@@ -47,7 +47,7 @@ body {
   }
 
   .list-group-item:first-of-type {
-    border-top-width: 0px;
+    border-top-width: 0;
   }
 
   .list-group-item>small {
