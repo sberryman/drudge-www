@@ -32,7 +32,6 @@ body {
 }
 
 .list-group-item>small {
-  /* font-size: 0.8em; */
   display: block;
 }
 
@@ -43,10 +42,19 @@ body {
 
   .list-group-item {
     background-color: #000;
-    border-color: #777;
+    border: solid 1px #000;
+    border-top-color: #444;
+  }
+
+  .list-group-item:first-of-type {
+    border-top-width: 0px;
+  }
+
+  .list-group-item>small {
+    color: #666;
   }
 
   .list-group-item-action {
-    color: #aaa;
+    color: #ccc;
   }
 }
